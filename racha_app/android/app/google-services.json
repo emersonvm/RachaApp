@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "951719281109",
+    "project_id": "racha-app-bc13d",
+    "storage_bucket": "racha-app-bc13d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951719281109:android:db650b0a1b2b3c5c26bd5c",
+        "android_client_info": {
+          "package_name": "br.com.racha_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "951719281109-qlsvjm2865p8jj9h7s41aglpe75cpkmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqm5PE-t-TMQ7Koqw9qI6_by_kAW-l8kk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "951719281109-qlsvjm2865p8jj9h7s41aglpe75cpkmv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
