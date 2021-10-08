@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:racha_app/components/user_tile.dart';
 import 'package:flutter/services.dart';
+import 'package:racha_app/models/auth.dart';
+import 'package:racha_app/utils/app_routes.dart';
+
+enum FilterOptions {
+  logout,
+}
 
 class HomePage extends StatefulWidget with ChangeNotifier {
   _HomePageState createState() => _HomePageState();
@@ -144,7 +151,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: Icon(Icons.menu_rounded),
         title: Text(
           'Racha App',
           style: TextStyle(
@@ -154,7 +160,39 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          Icon(Icons.more_vert_sharp),
+          PopupMenuButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+              size: 30,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                child: Text(
+                  'Sair',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                value: FilterOptions.logout,
+              ),
+            ],
+            onSelected: (FilterOptions selectedValue) {
+              setState(() {
+                if (selectedValue == FilterOptions.logout) {
+                  Provider.of<Auth>(
+                    context,
+                    listen: false,
+                  ).logout();
+
+                  Navigator.of(context).pushReplacementNamed(
+                    AppRoutes.AUTH_OR_HOME,
+                  );
+                }
+              });
+            },
+          ),
         ],
         backgroundColor: Colors.lightGreen,
       ),

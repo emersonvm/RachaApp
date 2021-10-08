@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.racha_app">
    <application
-        android:label="racha_app"
+        android:label="Racha App"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

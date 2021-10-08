@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:racha_app/Exceptions/auth_exception.dart';
 import 'package:racha_app/data/login_data.dart';
+import 'package:racha_app/models/auth.dart';
+
+enum AuthMode { Signup, Login }
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -11,30 +16,75 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final LoginData _loginData = LoginData();
-  Map<String, String> _loginDataform = {
+  bool _isLoading = false;
+  AuthMode _authMode = AuthMode.Login;
+  Map<String, String> _loginDataForm = {
     'email': '',
     'password': '',
   };
-  bool _isloading = false;
 
-  _submit() {
-    bool isValid = _formKey.currentState!.validate();
-    FocusScope.of(context).unfocus();
+  bool _isLogin() => _authMode == AuthMode.Login;
+  bool _isSignup() => _authMode == AuthMode.Signup;
+
+  void _switchAuthMode() {
+    setState(() {
+      if (_isLogin()) {
+        _authMode = AuthMode.Signup;
+      } else {
+        _authMode = AuthMode.Login;
+      }
+    });
+  }
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Ocorreu um Erro'),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
-    setState(() => _isloading = true);
-    _formKey.currentState?.save();
 
-    if (_loginData.isLogin) {
-      //login
-    } else {
-      //Registrar
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+    Auth auth = Provider.of(context, listen: false);
+
+    try {
+      if (_isLogin()) {
+        // Login
+        await auth.login(
+          _loginDataForm['email']!,
+          _loginDataForm['password']!,
+        );
+      } else {
+        // Registrar
+        await auth.signup(
+          _loginDataForm['email']!,
+          _loginDataForm['password']!,
+        );
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog('Ocorreu um erro inesperado!');
     }
 
-    setState(() => _isloading = false);
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -61,7 +111,7 @@ class _LoginFormState extends State<LoginForm> {
                     SizedBox(
                       height: 50,
                     ),
-                    if (_loginData.isSignup)
+                    if (_isSignup())
                       TextFormField(
                         decoration: InputDecoration(
                           hintText: '  E-mail',
@@ -70,7 +120,8 @@ class _LoginFormState extends State<LoginForm> {
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
-                        onChanged: (value) => _loginData.email = value,
+                        onSaved: (email) =>
+                            _loginDataForm['email'] = email ?? '',
                         validator: (value) {
                           if (value == null || !value.contains('@')) {
                             return 'Forneça um E-mail válido.';
@@ -78,10 +129,8 @@ class _LoginFormState extends State<LoginForm> {
                           return null;
                         },
                       ),
-                    if (_loginData.isLogin)
+                    if (_isLogin())
                       TextFormField(
-                        onSaved: (email) =>
-                            _loginDataform['email'] = email ?? '',
                         decoration: InputDecoration(
                           hintText: '  E-mail',
                           border: OutlineInputBorder(
@@ -89,7 +138,8 @@ class _LoginFormState extends State<LoginForm> {
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
-                        onChanged: (value) => _loginData.email = value,
+                        onSaved: (email) =>
+                            _loginDataForm['email'] = email ?? '',
                         validator: (value) {
                           if (value == null || !value.contains('@')) {
                             return 'Informe seu E-mail.';
@@ -100,11 +150,9 @@ class _LoginFormState extends State<LoginForm> {
                     SizedBox(
                       height: 10,
                     ),
-                    if (_loginData.isSignup)
+                    if (_isSignup())
                       TextFormField(
                         controller: _passwordController,
-                        onSaved: (password) =>
-                            _loginDataform['password'] = password ?? '',
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Senha',
@@ -113,7 +161,8 @@ class _LoginFormState extends State<LoginForm> {
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
-                        onChanged: (value) => _loginData.password = value,
+                        onSaved: (password) =>
+                            _loginDataForm['password'] = password ?? '',
                         validator: (value) {
                           if (value == null || value.trim().length < 8) {
                             return 'A Senha deve ter no mínimo 8 caracteres.';
@@ -124,10 +173,8 @@ class _LoginFormState extends State<LoginForm> {
                     SizedBox(
                       height: 10,
                     ),
-                    if (_loginData.isSignup)
+                    if (_isSignup())
                       TextFormField(
-                        onSaved: (password) =>
-                            _loginDataform['password'] = password ?? '',
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Confirme sua Senha',
@@ -136,7 +183,8 @@ class _LoginFormState extends State<LoginForm> {
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
-                        onChanged: (value) => _loginData.password = value,
+                        onSaved: (password) =>
+                            _loginDataForm['password'] = password ?? '',
                         validator: (value) {
                           if (value != _passwordController.text) {
                             return 'As senhas informadas não conferem';
@@ -144,10 +192,8 @@ class _LoginFormState extends State<LoginForm> {
                           return null;
                         },
                       ),
-                    if (_loginData.isLogin)
+                    if (_isLogin())
                       TextFormField(
-                        onSaved: (password) =>
-                            _loginDataform['password'] = password ?? '',
                         obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Senha',
@@ -156,7 +202,8 @@ class _LoginFormState extends State<LoginForm> {
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
-                        onChanged: (value) => _loginData.password = value,
+                        onSaved: (password) =>
+                            _loginDataForm['password'] = password ?? '',
                         validator: (value) {
                           if (value == null || value.trim().length < 8) {
                             return 'Informe sua Senha.';
@@ -197,13 +244,13 @@ class _LoginFormState extends State<LoginForm> {
                         child: TextButton(
                           child: Wrap(
                             children: <Widget>[
-                              if (_isloading)
+                              if (_isLoading)
                                 CircularProgressIndicator(
                                   color: Colors.white,
                                 )
                               else
                                 Text(
-                                  _loginData.isLogin ? 'Entrar' : 'Cadastrar',
+                                  _isLogin() ? 'Entrar' : 'Cadastrar',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -225,173 +272,18 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     TextButton(
                       child: Text(
-                        _loginData.isLogin
+                        _isLogin()
                             ? 'Novo por aqui? Crie uma conta!'
                             : 'Já possui uma conta?',
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _loginData.toggleMode();
-                        });
-                      },
+                      onPressed: _switchAuthMode,
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    if (_loginData.isLogin)
-                      Container(
-                        child: Text(
-                          'Ou',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    if (_loginData.isLogin)
-                      Container(
-                        height: 60,
-                        width: 250,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            stops: [0.3, 1],
-                            colors: [
-                              Color(0xFF3b5998),
-                              Color(0XFF4e71ba),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: SizedBox.expand(
-                          child: TextButton(
-                            child: Wrap(
-                              children: <Widget>[
-                                Text(
-                                  'Entrar com o Facebook',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    if (_loginData.isLogin)
-                      Container(
-                        height: 60,
-                        width: 250,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue, width: 3),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: SizedBox.expand(
-                          child: TextButton(
-                            child: Wrap(
-                              children: <Widget>[
-                                Text(
-                                  'Entrar com o',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  ' G',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  'o',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  'o',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.yellow,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  'g',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  'l',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  'e',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
                     SizedBox(
                       height: 40,
                     ),

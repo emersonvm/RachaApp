@@ -19,9 +19,14 @@ class RachaApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Auth(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => LoginPage(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomePage(),
+        ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
         title: 'Racha App',
         theme: ThemeData(
           primarySwatch: Colors.lightGreen,
@@ -41,6 +46,7 @@ class RachaApp extends StatelessWidget {
         routes: {
           AppRoutes.AUTH_OR_HOME: (ctx) => AuthOrHomePage(),
           AppRoutes.LOGIN_PAGE: (ctx) => LoginPage(),
+          AppRoutes.HOME: (ctx) => HomePage(),
         },
         debugShowCheckedModeBanner: false,
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/models/auth.dart';
-import 'package:shop/pages/auth_page.dart';
-import 'package:shop/pages/products_overview_page.dart';
+import 'package:racha_app/models/auth.dart';
+import 'home.page.dart';
+import 'login.page.dart';
 
 class AuthOrHomePage extends StatelessWidget {
   const AuthOrHomePage({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class AuthOrHomePage extends StatelessWidget {
             child: Text('Ocorreu um erro!'),
           );
         } else {
-          return auth.isAuth ? ProductsOverviewPage() : AuthPage();
+          return auth.isAuth ? HomePage() : LoginPage();
         }
       },
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:racha_app/components/login_form.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget with ChangeNotifier {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
