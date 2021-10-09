@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
 //------------------------------------------------------------------------------
   @override
   Widget _body() {
-    //Atributo privado inicia com _
     // NAVIGATION BAR
     final Size size = MediaQuery.of(context).size;
     return Stack(

@@ -31,8 +31,6 @@ class RachaApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.lightGreen,
           backgroundColor: Colors.lightGreen,
-          accentColor: Colors.green,
-          accentColorBrightness: Brightness.dark,
           buttonTheme: ButtonTheme.of(context).copyWith(
             buttonColor: Colors.greenAccent,
             textTheme: ButtonTextTheme.primary,

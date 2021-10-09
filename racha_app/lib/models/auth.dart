@@ -10,7 +10,6 @@ class Auth with ChangeNotifier {
   String? _email;
   String? _userId;
   DateTime? _expiryDate;
-  Timer? _logoutTimer;
 
   bool get isAuth {
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
@@ -64,7 +63,6 @@ class Auth with ChangeNotifier {
         'expiryDate': _expiryDate!.toIso8601String(),
       });
 
-      _autoLogout();
       notifyListeners();
     }
   }
@@ -91,7 +89,6 @@ class Auth with ChangeNotifier {
     _userId = userData['userId'];
     _expiryDate = expiryDate;
 
-    _autoLogout();
     notifyListeners();
   }
 
@@ -100,24 +97,9 @@ class Auth with ChangeNotifier {
     _email = null;
     _userId = null;
     _expiryDate = null;
-    _clearLogoutTimer();
+
     RachaApp.remove('userData').then((_) {
       notifyListeners();
     });
-  }
-
-  void _clearLogoutTimer() {
-    _logoutTimer?.cancel();
-    _logoutTimer = null;
-  }
-
-  void _autoLogout() {
-    _clearLogoutTimer();
-    final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
-    print(timeToLogout);
-    _logoutTimer = Timer(
-      Duration(seconds: timeToLogout ?? 0),
-      logout,
-    );
   }
 }

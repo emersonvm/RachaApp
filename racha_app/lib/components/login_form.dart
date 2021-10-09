@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racha_app/Exceptions/auth_exception.dart';
-import 'package:racha_app/data/login_data.dart';
 import 'package:racha_app/models/auth.dart';
 
 enum AuthMode { Signup, Login }
@@ -14,6 +13,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  bool _showPassword = false;
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool _isLoading = false;
@@ -153,14 +153,27 @@ class _LoginFormState extends State<LoginForm> {
                     if (_isSignup())
                       TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Senha',
+                          suffixIcon: GestureDetector(
+                            child: Icon(
+                              _showPassword == false
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.black12,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
+                        obscureText: _showPassword == false ? true : false,
                         onSaved: (password) =>
                             _loginDataForm['password'] = password ?? '',
                         validator: (value) {
@@ -175,14 +188,27 @@ class _LoginFormState extends State<LoginForm> {
                     ),
                     if (_isSignup())
                       TextFormField(
-                        obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Confirme sua Senha',
+                          suffixIcon: GestureDetector(
+                            child: Icon(
+                              _showPassword == false
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.black12,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
+                        obscureText: _showPassword == false ? true : false,
                         onSaved: (password) =>
                             _loginDataForm['password'] = password ?? '',
                         validator: (value) {
@@ -194,14 +220,27 @@ class _LoginFormState extends State<LoginForm> {
                       ),
                     if (_isLogin())
                       TextFormField(
-                        obscureText: true,
                         decoration: InputDecoration(
                           hintText: '  Senha',
+                          suffixIcon: GestureDetector(
+                            child: Icon(
+                              _showPassword == false
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.black12,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0)),
                           contentPadding: new EdgeInsets.symmetric(
                               vertical: 25.0, horizontal: 10.0),
                         ),
+                        obscureText: _showPassword == false ? true : false,
                         onSaved: (password) =>
                             _loginDataForm['password'] = password ?? '',
                         validator: (value) {
@@ -280,9 +319,6 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       ),
                       onPressed: _switchAuthMode,
-                    ),
-                    SizedBox(
-                      height: 10,
                     ),
                     SizedBox(
                       height: 40,
