@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racha_app/models/auth.dart';
-import 'home.page.dart';
-import 'login.page.dart';
+import 'home_page.dart';
+import 'login_page.dart';
 
 class AuthOrHomePage extends StatelessWidget {
   const AuthOrHomePage({Key? key}) : super(key: key);

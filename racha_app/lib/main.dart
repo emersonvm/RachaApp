@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:racha_app/models/event_list.dart';
 import 'package:racha_app/pages/auth_or_home_page.dart';
-import 'package:racha_app/pages/home.page.dart';
-import 'package:racha_app/pages/login.page.dart';
+import 'package:racha_app/pages/event_form_page.dart';
+import 'package:racha_app/pages/events_page.dart';
+import 'package:racha_app/pages/home_page.dart';
+import 'package:racha_app/pages/login_page.dart';
 import 'package:racha_app/utils/app_routes.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +28,9 @@ class RachaApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => HomePage(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => EventList(),
+        ),
       ],
       child: MaterialApp(
         title: 'Racha App',
@@ -45,6 +51,8 @@ class RachaApp extends StatelessWidget {
           AppRoutes.AUTH_OR_HOME: (ctx) => AuthOrHomePage(),
           AppRoutes.LOGIN_PAGE: (ctx) => LoginPage(),
           AppRoutes.HOME: (ctx) => HomePage(),
+          AppRoutes.EVENTS: (ctx) => EventsPage(),
+          AppRoutes.EVENT_FORM: (ctx) => EventFormPage(),
         },
         debugShowCheckedModeBanner: false,
       ),

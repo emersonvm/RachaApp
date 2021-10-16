@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:racha_app/components/event_grid.dart';
 import 'package:racha_app/components/user_tile.dart';
 import 'package:flutter/services.dart';
 import 'package:racha_app/models/auth.dart';
@@ -43,7 +44,7 @@ class BNBCustomPainter extends CustomPainter {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-
+  bool _showFavoriteOnly = false;
   setBottomBarIndex(index) {
     setState(() {
       currentIndex = index;
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
     final Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
+        EventGrid(_showFavoriteOnly),
         Positioned(
           bottom: 0,
           left: 0,
@@ -74,11 +76,18 @@ class _HomePageState extends State<HomePage> {
                   heightFactor: 0.6,
                   child: FloatingActionButton(
                       backgroundColor: Colors.lightGreen,
-                      child: Icon(Icons.add_circle),
+                      child: Icon(
+                        Icons.add_circle,
+                        color: Colors.white,
+                        size: 40,
+                      ),
                       elevation: 0.1,
-                      onPressed: (
-                          //ADICIONAR EVENTO NA HOME PAGE
-                          ) {}),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          AppRoutes.EVENT_FORM,
+                        );
+                        //ADICIONAR EVENTO NA HOME PAGE---------------------
+                      }),
                 ),
                 Container(
                   width: size.width,
@@ -89,9 +98,9 @@ class _HomePageState extends State<HomePage> {
                       IconButton(
                         icon: Icon(
                           Icons.home,
-                          color: currentIndex == 0
-                              ? Colors.black
-                              : Colors.grey.shade500,
+                          size: 30,
+                          color:
+                              currentIndex == 0 ? Colors.white : Colors.white,
                         ),
                         onPressed: () {
                           setBottomBarIndex(0);
@@ -101,12 +110,12 @@ class _HomePageState extends State<HomePage> {
                       IconButton(
                           icon: Icon(
                             Icons.event_available,
-                            color: currentIndex == 1
-                                ? Colors.black
-                                : Colors.grey.shade500,
+                            size: 30,
+                            color:
+                                currentIndex == 1 ? Colors.white : Colors.white,
                           ),
                           onPressed: () {
-                            Navigator.of(context).pushNamed('/participantes');
+                            Navigator.of(context).pushNamed('/events-page');
                             setBottomBarIndex(1);
                           }),
                       Container(
@@ -115,9 +124,9 @@ class _HomePageState extends State<HomePage> {
                       IconButton(
                           icon: Icon(
                             Icons.notifications,
-                            color: currentIndex == 2
-                                ? Colors.black
-                                : Colors.grey.shade500,
+                            size: 30,
+                            color:
+                                currentIndex == 2 ? Colors.white : Colors.white,
                           ),
                           onPressed: () {
                             setBottomBarIndex(2);
@@ -125,9 +134,9 @@ class _HomePageState extends State<HomePage> {
                       IconButton(
                           icon: Icon(
                             Icons.person,
-                            color: currentIndex == 3
-                                ? Colors.black
-                                : Colors.grey.shade500,
+                            size: 30,
+                            color:
+                                currentIndex == 3 ? Colors.white : Colors.white,
                           ),
                           onPressed: () {
                             setBottomBarIndex(3);
