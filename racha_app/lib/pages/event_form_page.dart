@@ -145,8 +145,8 @@ class _ProductFormPageState extends State<EventFormPage> {
                           return 'Nome é obrigatório';
                         }
 
-                        if (name.trim().length < 3) {
-                          return 'Nome precisa no mínimo de 3 letras.';
+                        if (name.trim().length < 8) {
+                          return 'Nome do evento precisa no mínimo de 8 letras.';
                         }
 
                         return null;
@@ -157,20 +157,20 @@ class _ProductFormPageState extends State<EventFormPage> {
                       decoration: InputDecoration(labelText: 'Endereço'),
                       textInputAction: TextInputAction.next,
                       focusNode: _addressFocus,
-                      keyboardType: TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_valueFocus);
                       },
-                      onSaved: (price) =>
-                          _formData['price'] = double.parse(price ?? '0'),
-                      validator: (_price) {
-                        final priceString = _price ?? '';
-                        final price = double.tryParse(priceString) ?? -1;
+                      onSaved: (address) =>
+                          (address) => _formData['address'] = address ?? '',
+                      validator: (_address) {
+                        final address = _address ?? '';
 
-                        if (price <= 0) {
-                          return 'Informe um preço válido.';
+                        if (address.trim().isEmpty) {
+                          return 'Nome é obrigatório';
+                        }
+
+                        if (address.trim().length < 8) {
+                          return 'O Endereço deve ter no mínimo 8 letras.';
                         }
 
                         return null;
@@ -180,17 +180,17 @@ class _ProductFormPageState extends State<EventFormPage> {
                       initialValue: _formData['totalValue']?.toString(),
                       decoration: InputDecoration(labelText: 'Valor Total'),
                       focusNode: _valueFocus,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      onSaved: (totalValue) =>
-                          _formData['totalValue'] = totalValue ?? '',
+                      keyboardType: TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      onSaved: (totalValue) => _formData['totalValue'] =
+                          double.parse(totalValue ?? '0'),
                       validator: (_totalValue) {
                         final totalValue = _totalValue ?? '';
+                        final value = double.tryParse(totalValue) ?? -1;
 
-                        if (totalValue.trim().isEmpty) {
-                          return 'Valor é obrigatório.';
+                        if (value <= 0) {
+                          return 'Informe um preço válido.';
                         }
 
                         return null;
