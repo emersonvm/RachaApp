@@ -38,7 +38,7 @@ class EventItem extends StatelessWidget {
                 showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: Text('Excluir Produto'),
+                    title: Text('Excluir evento'),
                     content: Text('Tem certeza?'),
                     actions: [
                       TextButton(

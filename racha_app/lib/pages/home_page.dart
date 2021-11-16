@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racha_app/components/event_grid.dart';
+
 import 'package:racha_app/components/user_tile.dart';
 import 'package:flutter/services.dart';
 import 'package:racha_app/models/auth.dart';
+import 'package:racha_app/models/event_list.dart';
 import 'package:racha_app/utils/app_routes.dart';
 
 enum FilterOptions {
   logout,
 }
+
+final eventos = EventGrid();
 
 class HomePage extends StatefulWidget with ChangeNotifier {
   _HomePageState createState() => _HomePageState();
@@ -44,7 +48,7 @@ class BNBCustomPainter extends CustomPainter {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
-  bool _showFavoriteOnly = false;
+
   setBottomBarIndex(index) {
     setState(() {
       currentIndex = index;
@@ -58,28 +62,28 @@ class _HomePageState extends State<HomePage> {
     final Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        EventGrid(_showFavoriteOnly),
+        EventGrid(),
         Positioned(
           bottom: 0,
           left: 0,
           child: Container(
             width: size.width,
-            height: 80,
+            height: 90,
             child: Stack(
               clipBehavior: Clip.antiAlias,
               children: [
                 CustomPaint(
-                  size: Size(size.width, 80),
+                  size: Size(size.width, 100),
                   painter: BNBCustomPainter(),
                 ),
                 Center(
-                  heightFactor: 0.6,
+                  heightFactor: 0.8,
                   child: FloatingActionButton(
                       backgroundColor: Colors.lightGreen,
                       child: Icon(
-                        Icons.add_circle,
+                        Icons.add_sharp,
                         color: Colors.white,
-                        size: 40,
+                        size: 50,
                       ),
                       elevation: 0.1,
                       onPressed: () {

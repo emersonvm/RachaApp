@@ -6,10 +6,11 @@ import 'package:racha_app/utils/constants.dart';
 
 class Event with ChangeNotifier {
   final String id;
+  final String image = 'package:';
   final String name;
   final double totalValue;
-  final double missingValue;
-  final DateTime dateEvent;
+  final double missingValue = 0;
+
   final String address;
   bool isFavorite;
 
@@ -17,8 +18,6 @@ class Event with ChangeNotifier {
     required this.id,
     required this.name,
     required this.totalValue,
-    required this.missingValue,
-    required this.dateEvent,
     required this.address,
     this.isFavorite = true,
   });
@@ -33,7 +32,7 @@ class Event with ChangeNotifier {
 
       final response = await http.put(
         Uri.parse(
-          '${Constants.USER_FAVORITES_URL}/$userId/$id.json?auth=$token',
+          '${Constants.USER_FAVORITES_URL}/$userId/$id.json',
         ),
         body: jsonEncode(isFavorite),
       );

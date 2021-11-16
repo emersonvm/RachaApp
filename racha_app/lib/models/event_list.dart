@@ -29,13 +29,13 @@ class EventList with ChangeNotifier {
     _events.clear();
 
     final response = await http.get(
-      Uri.parse('${Constants.EVENT_BASE_URL}.json?auth=$_token'),
+      Uri.parse('${Constants.EVENT_BASE_URL}.json'),
     );
     if (response.body == 'null') return;
 
     final favResponse = await http.get(
       Uri.parse(
-        '${Constants.USER_FAVORITES_URL}/$_userId.json?auth=$_token',
+        '${Constants.USER_FAVORITES_URL}/$_userId.json',
       ),
     );
 
@@ -49,10 +49,8 @@ class EventList with ChangeNotifier {
         Event(
           id: eventId,
           name: eventData['name'],
-          totalValue: eventData['totalValue'],
-          missingValue: data['missingValue'],
           address: eventData['address'],
-          dateEvent: eventData['dateEvent'],
+          totalValue: eventData['totalValue'],
           isFavorite: isFavorite,
         ),
       );
@@ -66,10 +64,8 @@ class EventList with ChangeNotifier {
     final event = Event(
       id: hasId ? data['id'] as String : Random().nextDouble().toString(),
       name: data['name'] as String,
-      totalValue: data['totalValue'] as double,
-      missingValue: data['missingValue'] as double,
-      dateEvent: data['dateEvent'] as DateTime,
       address: data['address'] as String,
+      totalValue: data['totalValue'] as double,
     );
 
     if (hasId) {
@@ -81,14 +77,12 @@ class EventList with ChangeNotifier {
 
   Future<void> addEvent(Event event) async {
     final response = await http.post(
-      Uri.parse('${Constants.EVENT_BASE_URL}.json?auth=$_token'),
+      Uri.parse('${Constants.EVENT_BASE_URL}.json'),
       body: jsonEncode(
         {
           "name": event.name,
-          "totalValue": event.totalValue,
-          "missingValue": event.missingValue,
-          "dateEvent": event.dateEvent,
           "address": event.address,
+          "totalValue": event.totalValue,
         },
       ),
     );
@@ -97,10 +91,8 @@ class EventList with ChangeNotifier {
     _events.add(Event(
       id: id,
       name: event.name,
-      totalValue: event.totalValue,
-      missingValue: event.missingValue,
-      dateEvent: event.dateEvent,
       address: event.address,
+      totalValue: event.totalValue,
     ));
     notifyListeners();
   }
@@ -111,15 +103,13 @@ class EventList with ChangeNotifier {
     if (index >= 0) {
       await http.patch(
         Uri.parse(
-          '${Constants.EVENT_BASE_URL}/${event.id}.json?auth=$_token',
+          '${Constants.EVENT_BASE_URL}/${event.id}.json',
         ),
         body: jsonEncode(
           {
             "name": event.name,
-            "totalValue": event.totalValue,
-            "missingValue": event.missingValue,
-            "dateEvent": event.dateEvent,
             "address": event.address,
+            "totalValue": event.totalValue,
           },
         ),
       );
@@ -139,7 +129,7 @@ class EventList with ChangeNotifier {
 
       final response = await http.delete(
         Uri.parse(
-          '${Constants.EVENT_BASE_URL}/${event.id}.json?auth=$_token',
+          '${Constants.EVENT_BASE_URL}/${event.id}.json',
         ),
       );
 

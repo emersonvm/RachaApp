@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racha_app/Exceptions/auth_exception.dart';
@@ -14,6 +15,9 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool _showPassword = false;
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+
   final _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
   bool _isLoading = false;

@@ -37,7 +37,6 @@ class _ProductFormPageState extends State<EventFormPage> {
         _formData['name'] = event.name;
         _formData['address'] = event.address;
         _formData['totalValue'] = event.totalValue;
-        _formData['missingValue'] = event.missingValue;
       }
     }
   }
@@ -47,18 +46,6 @@ class _ProductFormPageState extends State<EventFormPage> {
     super.dispose();
     _addressFocus.dispose();
     _valueFocus.dispose();
-  }
-
-  void updateImage() {
-    setState(() {});
-  }
-
-  bool isValidImageUrl(String url) {
-    bool isValidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
-    bool endsWithFile = url.toLowerCase().endsWith('.png') ||
-        url.toLowerCase().endsWith('.jpg') ||
-        url.toLowerCase().endsWith('.jpeg');
-    return isValidUrl && endsWithFile;
   }
 
   Future<void> _submitForm() async {
@@ -84,7 +71,7 @@ class _ProductFormPageState extends State<EventFormPage> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Ocorreu um erro!'),
-          content: Text('Ocorreu um erro para salvar o produto.'),
+          content: Text('Ocorreu um erro para salvar o evento.'),
           actions: [
             TextButton(
               child: Text('Ok'),
@@ -111,12 +98,6 @@ class _ProductFormPageState extends State<EventFormPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: _submitForm,
-            icon: Icon(Icons.save),
-          ),
-        ],
       ),
       body: _isLoading
           ? Center(
@@ -154,23 +135,25 @@ class _ProductFormPageState extends State<EventFormPage> {
                     ),
                     TextFormField(
                       initialValue: _formData['address']?.toString(),
-                      decoration: InputDecoration(labelText: 'Endereço'),
+                      decoration: InputDecoration(
+                        labelText: 'Endereço',
+                      ),
                       textInputAction: TextInputAction.next,
                       focusNode: _addressFocus,
                       onFieldSubmitted: (_) {
                         FocusScope.of(context).requestFocus(_valueFocus);
                       },
                       onSaved: (address) =>
-                          (address) => _formData['address'] = address ?? '',
+                          _formData['address'] = address ?? '',
                       validator: (_address) {
                         final address = _address ?? '';
 
                         if (address.trim().isEmpty) {
-                          return 'Nome é obrigatório';
+                          return 'Endereço é obrigatório';
                         }
 
                         if (address.trim().length < 8) {
-                          return 'O Endereço deve ter no mínimo 8 letras.';
+                          return 'O endereço deve ter no mínimo 8 letras.';
                         }
 
                         return null;
@@ -195,6 +178,58 @@ class _ProductFormPageState extends State<EventFormPage> {
 
                         return null;
                       },
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      height: 60,
+                      width: 20,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomRight,
+                          end: Alignment.topLeft,
+                          stops: [0.3, 1],
+                          colors: [
+                            Color(0xFF9acd32),
+                            Color(0XFF28a428),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: SizedBox.expand(
+                        child: TextButton(
+                          child: Wrap(
+                            children: <Widget>[
+                              if (_isLoading)
+                                CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              else
+                                Text(
+                                  'Salvar',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          onPressed: _submitForm,
+                        ),
+                      ),
                     ),
                   ],
                 ),
