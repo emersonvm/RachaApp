@@ -20,7 +20,7 @@ class EventsPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Eventos',
+          'Gerenciar Eventos',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,

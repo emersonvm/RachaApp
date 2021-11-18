@@ -34,7 +34,7 @@ class EventDetailPage extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'Valor faltante: R\$ ${event.missingValue}',
+            'Valor faltante: R\$ ${-(event.paidValue - event.totalValue)}',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.grey,

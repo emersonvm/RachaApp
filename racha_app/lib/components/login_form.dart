@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:racha_app/Exceptions/auth_exception.dart';
@@ -25,6 +26,7 @@ class _LoginFormState extends State<LoginForm> {
   Map<String, String> _loginDataForm = {
     'email': '',
     'password': '',
+    'username': '',
   };
 
   bool _isLogin() => _authMode == AuthMode.Login;
@@ -133,6 +135,9 @@ class _LoginFormState extends State<LoginForm> {
                           return null;
                         },
                       ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     if (_isLogin())
                       TextFormField(
                         decoration: InputDecoration(

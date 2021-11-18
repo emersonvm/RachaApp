@@ -91,7 +91,7 @@ class _ProductFormPageState extends State<EventFormPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Novo Evento',
+          'Formulário de Evento',
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,

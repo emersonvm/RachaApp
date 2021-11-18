@@ -8,6 +8,7 @@ class Event with ChangeNotifier {
   final String id;
   final String image = 'package:';
   final String name;
+  final double paidValue = 15;
   final double totalValue;
   final double missingValue = 0;
 
