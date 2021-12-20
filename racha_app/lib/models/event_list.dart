@@ -12,8 +12,6 @@ class EventList with ChangeNotifier {
   List<Event> _events = [];
 
   List<Event> get items => [..._events];
-  List<Event> get favoriteEvents =>
-      _events.where((prod) => prod.isFavorite).toList();
 
   EventList([
     this._token = '',
@@ -33,25 +31,14 @@ class EventList with ChangeNotifier {
     );
     if (response.body == 'null') return;
 
-    final favResponse = await http.get(
-      Uri.parse(
-        '${Constants.USER_FAVORITES_URL}/$_userId.json',
-      ),
-    );
-
-    Map<String, dynamic> favData =
-        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
-
     Map<String, dynamic> data = jsonDecode(response.body);
     data.forEach((eventId, eventData) {
-      final isFavorite = favData[eventId] ?? false;
       _events.add(
         Event(
           id: eventId,
           name: eventData['name'],
           address: eventData['address'],
           totalValue: eventData['totalValue'],
-          isFavorite: isFavorite,
         ),
       );
     });
